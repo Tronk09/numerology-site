@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ninefold — Vedic Numerology Readings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0F1420;
+    --ink-2:#141A29;
+    --card:#1A2233;
+    --card-line: rgba(237,230,214,0.10);
+    --gold:#C9A961;
+    --gold-dim: rgba(201,169,97,0.35);
+    --gold-soft: rgba(201,169,97,0.12);
+    --ivory:#EDE6D6;
+    --muted:#8C93A8;
+    --muted-2:#5C6478;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:transparent;
+    color:var(--ivory);
+    font-family:'Inter', sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  ::selection{ background:var(--gold-dim); color:var(--ink); }
+
+  /* Scroll-driven scene background — sits behind everything, crossfades tone per section */
+  .scene-bg{
+    position:fixed; inset:0; z-index:-2;
+    background-color: var(--ink);
+    transition: background-color 1.4s ease;
+  }
+  .scene-glow{
+    position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background: radial-gradient(ellipse 900px 600px at 78% 8%, rgba(201,169,97,0.10), transparent 60%);
+  }
+  .progress-bar{
+    position:fixed; top:0; left:0; height:2px; width:0%;
+    background:var(--gold); z-index:100;
+    transition: width 0.1s linear;
+  }
+
+  h1,h2,h3{ font-family:'Fraunces', serif; font-weight:500; letter-spacing:-0.01em; }
+  a{ color:inherit; text-decoration:none; }
+
+  .wrap{ max-width:1160px; margin:0 auto; padding:0 32px; }
+  section{ position:relative; }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(15,20,32,0.85);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--card-line);
+  }
+  nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:76px; }
+  .brand{ font-family:'Fraunces', serif; font-size:1.35rem; font-weight:500; letter-spacing:0.02em; display:flex; align-items:center; gap:10px;}
+  .brand .mark{
+    width:30px; height:30px; border:1px solid var(--gold); border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono', monospace; font-size:0.75rem; color:var(--gold);
+  }
+  .nav-links{ display:flex; gap:36px; font-size:0.92rem; color:var(--muted); }
+  .nav-links a:hover{ color:var(--ivory); }
+  .nav-cta{
+    padding:10px 22px; border:1px solid var(--gold); border-radius:2px;
+    color:var(--gold) !important; font-size:0.88rem; letter-spacing:0.02em;
+    transition:all .25s ease;
+  }
+  .nav-cta:hover{ background:var(--gold); color:var(--ink) !important; }
+
+  /* ---------- HERO ---------- */
+  .hero{ padding:88px 0 90px; }
+  .hero-grid{
+    display:grid; grid-template-columns: 1.05fr 0.95fr; gap:64px; align-items:center;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:0.78rem; letter-spacing:0.15em;
+    color:var(--gold); text-transform:uppercase; margin-bottom:22px; display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{ content:''; width:26px; height:1px; background:var(--gold); }
+  .hero h1{
+    font-size:3.2rem; line-height:1.08; color:var(--ivory); margin-bottom:22px;
+  }
+  .hero h1 em{ font-style:italic; color:var(--gold); font-weight:400; }
+  .hero p.lead{
+    font-size:1.06rem; color:var(--muted); max-width:480px; margin-bottom:34px;
+  }
+  .hero-actions{ display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+  .btn-primary{
+    background:var(--gold); color:var(--ink); font-weight:600; font-size:0.94rem;
+    padding:15px 30px; border-radius:2px; border:1px solid var(--gold);
+    transition:all .25s ease; display:inline-block;
+  }
+  .btn-primary:hover{ background:transparent; color:var(--gold); }
+  .btn-ghost{
+    color:var(--muted); font-size:0.9rem; border-bottom:1px solid var(--muted-2);
+    padding-bottom:2px; transition:all .2s ease;
+  }
+  .btn-ghost:hover{ color:var(--ivory); border-color:var(--gold); }
+
+  /* Life path widget */
+  .widget{
+    background:var(--card); border:1px solid var(--card-line); border-radius:4px;
+    padding:34px; position:relative;
+    will-change: transform;
+  }
+  .widget::before{
+    content:''; position:absolute; inset:8px; border:1px solid rgba(201,169,97,0.18); border-radius:2px; pointer-events:none;
+  }
+  .widget-label{
+    font-family:'IBM Plex Mono', monospace; font-size:0.72rem; letter-spacing:0.12em;
+    color:var(--gold); text-transform:uppercase; margin-bottom:6px;
+  }
+  .widget-title{ font-family:'Fraunces', serif; font-size:1.25rem; color:var(--ivory); margin-bottom:6px; }
+  .widget-sub{ font-size:0.85rem; color:var(--muted); margin-bottom:22px; }
+  .widget input[type="date"]{
+    width:100%; background:var(--ink-2); border:1px solid var(--card-line); border-radius:2px;
+    color:var(--ivory); font-family:'IBM Plex Mono', monospace; font-size:0.95rem;
+    padding:13px 14px; margin-bottom:22px; color-scheme: dark;
+  }
+  .widget input[type="date"]:focus{ outline:none; border-color:var(--gold); }
+
+  .reduction{
+    display:flex; align-items:center; flex-wrap:wrap; gap:8px; min-height:34px; margin-bottom:20px;
+    font-family:'IBM Plex Mono', monospace; font-size:0.95rem; color:var(--muted);
+  }
+  .reduction .step{
+    opacity:0; transform:translateY(6px); animation:stepIn .4s ease forwards;
+    padding:4px 9px; border:1px solid var(--card-line); border-radius:2px; background:var(--ink-2);
+  }
+  .reduction .arrow{ opacity:0; color:var(--muted-2); animation:stepIn .4s ease forwards; }
+  @keyframes stepIn{ to{ opacity:1; transform:translateY(0); } }
+
+  .result{
+    display:flex; align-items:center; gap:18px; padding-top:18px; border-top:1px solid var(--card-line);
+  }
+  .result-number{
+    width:64px; height:64px; border:1px solid var(--gold); border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces', serif; font-size:1.8rem; color:var(--gold);
+    flex-shrink:0; transition: all .3s ease;
+  }
+  .result-text{ font-size:0.88rem; color:var(--muted); }
+  .result-text strong{ color:var(--ivory); display:block; font-family:'Fraunces', serif; font-size:1.05rem; font-weight:500; margin-bottom:3px; }
+  .widget-placeholder{ font-size:0.85rem; color:var(--muted-2); font-style:italic; }
+  .result-link{ margin-top:16px; }
+  .result-link a{
+    font-size:0.85rem; color:var(--gold); border-bottom:1px solid var(--gold-dim); padding-bottom:1px;
+  }
+  .result-link a:hover{ border-color:var(--gold); }
+  .teaser-note{ font-size:0.72rem; color:var(--muted-2); margin-top:16px; font-style:italic; }
+
+  /* ---------- TICKER ---------- */
+  .ticker-band{
+    border-top:1px solid var(--card-line); border-bottom:1px solid var(--card-line);
+    background:var(--ink-2); padding:20px 0; overflow:hidden; white-space:nowrap;
+  }
+  .ticker-track{ display:inline-flex; gap:56px; animation:scroll 32s linear infinite; }
+  .ticker-band:hover .ticker-track{ animation-play-state:paused; }
+  @keyframes scroll{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+  .ticker-item{ display:inline-flex; align-items:baseline; gap:10px; font-family:'IBM Plex Mono', monospace; }
+  .ticker-item .num{ color:var(--gold); font-size:1.1rem; }
+  .ticker-item .label{ color:var(--muted); font-size:0.82rem; letter-spacing:0.06em; text-transform:uppercase; }
+
+  /* ---------- SECTION HEADERS ---------- */
+  .section-head{ margin-bottom:56px; max-width:560px; }
+  .section-head .eyebrow{ margin-bottom:14px; }
+  .section-head h2{ font-size:2.1rem; color:var(--ivory); margin-bottom:14px; }
+  .section-head p{ color:var(--muted); font-size:0.98rem; }
+
+  .reveal{ opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  /* ---------- ABOUT ---------- */
+  .about{ padding:110px 0; }
+  .about-grid{ display:grid; grid-template-columns: 0.8fr 1.2fr; gap:64px; align-items:start; }
+  .portrait{
+    aspect-ratio: 4/5; background:linear-gradient(160deg, var(--card), var(--ink-2));
+    border:1px solid var(--card-line); border-radius:4px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono', monospace; color:var(--muted-2); font-size:0.8rem; text-align:center; padding:20px;
+  }
+  .ledger{ list-style:none; }
+  .ledger li{
+    display:flex; gap:20px; padding:18px 0; border-bottom:1px solid var(--card-line);
+    font-size:0.95rem; color:var(--muted);
+  }
+  .ledger li:first-child{ padding-top:0; }
+  .ledger .tag{
+    font-family:'IBM Plex Mono', monospace; font-size:0.75rem; color:var(--gold);
+    letter-spacing:0.08em; text-transform:uppercase; flex-shrink:0; width:120px; padding-top:2px;
+  }
+  .about p.intro{ font-size:1.05rem; color:var(--ivory); margin-bottom:28px; font-weight:400; }
+
+  /* ---------- OFFER / TIERS ---------- */
+  .offer{ padding:110px 0; border-top:1px solid var(--card-line); border-bottom:1px solid var(--card-line); }
+  .tier-grid{
+    display:grid; grid-template-columns:repeat(4, 1fr); gap:1px; background:var(--card-line); border:1px solid var(--card-line);
+  }
+  .tier-card{ background:var(--ink-2); padding:34px 28px; display:flex; flex-direction:column; }
+  .tier-card.featured{ background:var(--card); box-shadow: inset 0 0 0 1px var(--gold-dim); }
+  .tier-card .t-label{ font-family:'IBM Plex Mono', monospace; color:var(--gold); font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:14px; display:block; }
+  .tier-card h3{ font-size:1.35rem; color:var(--ivory); margin-bottom:10px; }
+  .tier-card p{ color:var(--muted); font-size:0.9rem; margin-bottom:20px; flex-grow:1; }
+  .tier-card .price{ font-family:'IBM Plex Mono', monospace; color:var(--ivory); font-size:1.5rem; margin-bottom:4px; display:block; }
+  .tier-card .price span{ font-size:0.8rem; color:var(--muted); }
+  .tier-card ul{ list-style:none; margin:14px 0 22px; font-size:0.86rem; color:var(--muted); }
+  .tier-card li{ padding:5px 0; padding-left:18px; position:relative; }
+  .tier-card li::before{ content:'—'; position:absolute; left:0; color:var(--gold-dim); }
+  .tier-card a.cta{
+    display:block; text-align:center; padding:12px; border:1px solid var(--gold); border-radius:2px;
+    color:var(--gold); font-size:0.88rem; transition:all .25s ease;
+  }
+  .tier-card a.cta:hover{ background:var(--gold); color:var(--ink); }
+  .tier-card.featured a.cta{ background:var(--gold); color:var(--ink); font-weight:600; }
+  .tier-card.featured a.cta:hover{ background:transparent; color:var(--gold); }
+  .offer-foot{ font-size:0.78rem; color:var(--muted-2); margin-top:26px; max-width:760px; }
+
+  /* ---------- TESTIMONIALS ---------- */
+  .testimonials{ padding:110px 0; }
+  .quote-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:28px; }
+  .quote-card{
+    background:var(--card); border:1px solid var(--card-line); border-radius:4px; padding:30px;
+  }
+  .quote-card .mark{ font-family:'Fraunces', serif; font-size:2.2rem; color:var(--gold-dim); line-height:1; margin-bottom:10px; }
+  .quote-card p{ color:var(--ivory); font-size:0.96rem; margin-bottom:22px; font-style:italic; }
+  .quote-card .attr{ font-family:'IBM Plex Mono', monospace; font-size:0.78rem; color:var(--muted); }
+
+  /* ---------- BOOKING / BRIEFING ---------- */
+  .booking{ padding:110px 0; border-top:1px solid var(--card-line); }
+  .booking-grid{ display:grid; grid-template-columns:0.85fr 1.15fr; gap:64px; }
+  .booking-info h2{ font-size:2.1rem; color:var(--ivory); margin-bottom:18px; }
+  .booking-info p{ color:var(--muted); margin-bottom:28px; max-width:420px; }
+  .booking-steps{ list-style:none; }
+  .booking-steps li{ display:flex; gap:16px; padding:14px 0; font-size:0.92rem; color:var(--muted); }
+  .booking-steps .n{ font-family:'IBM Plex Mono', monospace; color:var(--gold); flex-shrink:0; }
+
+  form.book-form{
+    background:var(--card); border:1px solid var(--card-line); border-radius:4px; padding:36px;
+  }
+  .form-row{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:18px; }
+  .field{ display:flex; flex-direction:column; gap:7px; }
+  .field.full{ grid-column:1 / -1; }
+  .field label{ font-family:'IBM Plex Mono', monospace; font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); }
+  .field input, .field select, .field textarea{
+    background:var(--ink-2); border:1px solid var(--card-line); border-radius:2px;
+    color:var(--ivory); padding:12px 13px; font-family:'Inter', sans-serif; font-size:0.92rem;
+    color-scheme: dark;
+  }
+  .field textarea{ resize:vertical; min-height:72px; }
+  .field input:focus, .field select:focus, .field textarea:focus{ outline:none; border-color:var(--gold); }
+  .book-form button{
+    width:100%; background:var(--gold); color:var(--ink); font-weight:600; font-size:0.95rem;
+    padding:15px; border:none; border-radius:2px; cursor:pointer; transition:opacity .2s ease; margin-top:6px;
+  }
+  .book-form button:hover{ opacity:0.88; }
+  .form-note{ font-size:0.78rem; color:var(--muted-2); margin-top:14px; text-align:center; }
+
+  .success-panel{ display:none; text-align:center; padding:20px 0; }
+  .success-panel .result-number{ margin:0 auto 20px; }
+  .success-panel h3{ color:var(--ivory); font-size:1.3rem; margin-bottom:10px; }
+  .success-panel p{ color:var(--muted); font-size:0.92rem; }
+
+  /* ---------- DISCLAIMER ---------- */
+  .disclaimer{ padding:70px 0; border-top:1px solid var(--card-line); }
+  .disclaimer h2{ font-size:1.5rem; color:var(--ivory); margin-bottom:16px; }
+  .disclaimer p{ color:var(--muted); font-size:0.92rem; max-width:840px; margin-bottom:14px; }
+  .disclaimer p.clause{ color:var(--gold); }
+
+  /* ---------- FOOTER ---------- */
+  footer{ padding:50px 0; border-top:1px solid var(--card-line); }
+  .footer-grid{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+  footer .brand{ font-size:1.05rem; }
+  .footer-links{ display:flex; gap:28px; font-size:0.85rem; color:var(--muted); }
+  .footer-links a:hover{ color:var(--gold); }
+  .footer-fine{ font-size:0.78rem; color:var(--muted-2); margin-top:20px; }
+
+  @media (max-width: 960px){
+    .tier-grid{ grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width: 880px){
+    .hero-grid, .about-grid, .booking-grid{ grid-template-columns:1fr; }
+    .hero h1{ font-size:2.4rem; }
+    .service-grid, .quote-grid{ grid-template-columns:1fr; }
+    .nav-links{ display:none; }
+    .form-row{ grid-template-columns:1fr; }
+    .portrait{ aspect-ratio:16/9; }
+  }
+  @media (max-width: 560px){
+    .tier-grid{ grid-template-columns:1fr; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scene-bg" id="sceneBg"></div>
+<div class="scene-glow"></div>
+<div class="progress-bar" id="progressBar"></div>
+
+<nav>
+  <div class="wrap">
+    <div class="brand"><span class="mark">9</span>Ninefold</div>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#offer">Readings</a>
+      <a href="#stories">Stories</a>
+    </div>
+    <a href="#booking" class="nav-cta">Get a reading</a>
+  </div>
+</nav>
+
+<section class="hero" data-bg="#0F1420">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Vedic numerology, read by a person</div>
+      <h1>Your chart is a map.<br>Let someone actually <em>read it</em> for you.</h1>
+      <p class="lead">Not an app that spits out a number — a Vedic reading, calculated precisely and then interpreted plainly, for real decisions. A written report you keep, with the option to talk it through.</p>
+      <div class="hero-actions">
+        <a href="#booking" class="btn-primary">Get your reading</a>
+        <a href="#offer" class="btn-ghost">See what's included</a>
+      </div>
+    </div>
+
+    <div class="widget">
+      <div class="widget-label">Free first look</div>
+      <div class="widget-title">Find your Life Path number</div>
+      <div class="widget-sub">One number, quick and free. The full chart — and the reading — goes far deeper.</div>
+      <input type="date" id="dobInput" aria-label="Date of birth">
+
+      <div class="reduction" id="reduction"></div>
+
+      <div id="resultBox">
+        <p class="widget-placeholder">Enter your birth date and your Life Path number will appear here.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker-band">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<section class="about" id="about" data-bg="#111728">
+  <div class="wrap about-grid">
+    <div class="reveal">
+      <div class="portrait">[ portrait or workspace photo ]</div>
+    </div>
+    <div class="reveal">
+      <div class="eyebrow">About</div>
+      <h2 style="font-size:2.1rem; color:var(--ivory); margin-bottom:20px;">The calculator gives the numbers. A human gives them meaning.</h2>
+      <p class="intro">Anyone can punch a date into a free app. What you're paying for is the reading — a careful, contextualised walkthrough of what your chart actually points to, written in plain language and applied to the decisions in front of you.</p>
+      <ul class="ledger">
+        <li><span class="tag">Method</span> Vedic numerology — Life Path, Expression, Soul Urge, core numbers and current-period cycles.</li>
+        <li><span class="tag">Approach</span> Numbers calculated precisely, then interpreted honestly. No padding it out to sound more dramatic than it is.</li>
+        <li><span class="tag">Format</span> A written PDF report you keep, with an optional paid call to talk it through.</li>
+        <li><span class="tag">Reading</span> Real themes for real decisions — career moves, relationships, timing, major choices.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="offer" id="offer" data-bg="#141A2C">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Readings</div>
+      <h2>Four ways in, one product</h2>
+      <p>Every reading is a personalised chart-and-interpretation, delivered as a written report. Start free to get a feel; go deeper when it matters.</p>
+    </div>
+    <div class="tier-grid reveal">
+      <div class="tier-card">
+        <span class="t-label">Free</span>
+        <h3>The First Look</h3>
+        <p>Your Life Path number and a short flavour of what it suggests. Enough to feel seen, not enough to stay satisfied.</p>
+        <span class="price">£0<span> / on the page</span></span>
+        <ul>
+          <li>Life Path number</li>
+          <li>Short starter meaning</li>
+        </ul>
+        <a class="cta" href="#hero">Try it free</a>
+      </div>
+
+      <div class="tier-card">
+        <span class="t-label">Tier 1</span>
+        <h3>Essential Chart</h3>
+        <p>Your core numbers in a written report — the essentials, clearly explained, no fluff.</p>
+        <span class="price">£20<span> / one-time</span></span>
+        <ul>
+          <li>Life Path, Expression, Soul Urge</li>
+          <li>Plain-language interpretation (PDF)</li>
+          <li>Kept on file for future upgrades</li>
+        </ul>
+        <a class="cta" href="#booking">Get Essential</a>
+      </div>
+
+      <div class="tier-card featured">
+        <span class="t-label">Tier 2 · Most popular</span>
+        <h3>Full Reading</h3>
+        <p>The complete written chart — every core number, current-period forecast, and a deeper interpretation written around your situation.</p>
+        <span class="price">£50<span> / one-time</span></span>
+        <ul>
+          <li>Complete core chart</li>
+          <li>Compatibility where relevant</li>
+          <li>Current-period forecast</li>
+          <li>Deeper written interpretation (PDF)</li>
+        </ul>
+        <a class="cta" href="#booking">Get Full Reading</a>
+      </div>
+
+      <div class="tier-card">
+        <span class="t-label">Tier 3</span>
+        <h3>Full + Live Call</h3>
+        <p>Everything in the Full Reading, plus a live 1:1 call to talk it through and ask your questions as they come.</p>
+        <span class="price">£100<span> / one-time</span></span>
+        <ul>
+          <li>Everything in Full Reading</li>
+          <li>1:1 live walkthrough call</li>
+          <li>You keep the written report</li>
+        </ul>
+        <a class="cta" href="#booking">Book Full + Call</a>
+      </div>
+    </div>
+    <p class="offer-foot">One-time prices, no subscription. The written report is emailed to you after payment — payment links below / on booking. Prices are starting points and will be tuned to demand.</p>
+  </div>
+</section>
+
+<section class="testimonials" id="stories" data-bg="#171227">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Stories</div>
+      <h2>What a reading feels like</h2>
+    </div>
+    <div class="quote-grid reveal">
+      <div class="quote-card">
+        <div class="mark">“</div>
+        <p>I expected something vague. Instead it read like a consultation — the numbers were calculated properly, and the interpretation actually spoke to the decision I was making.</p>
+        <div class="attr">— R. M., Personal Reading</div>
+      </div>
+      <div class="quote-card">
+        <div class="mark">“</div>
+        <p>Booked this around a big career decision. What I valued most was that it named the theme honestly instead of promising me a result. That's why I trusted the written report.</p>
+        <div class="attr">— S. K., Full Reading</div>
+      </div>
+      <div class="quote-card">
+        <div class="mark">“</div>
+        <p>Gifted a Full Reading to my sister before her wedding — her own number, her own report. It became the favourite conversation of the month.</p>
+        <div class="attr">— A. P., Gift Reading</div>
+      </div>
+    </div>
+    <p style="font-size:0.78rem; color:var(--muted-2); margin-top:22px;">Sample testimonials — swap in real client quotes once you have them.</p>
+  </div>
+</section>
+
+<section class="booking" id="booking" data-bg="#1C1730">
+  <div class="wrap booking-grid">
+    <div class="booking-info reveal">
+      <div class="eyebrow">Book</div>
+      <h2>Your reading, in four steps</h2>
+      <p>Send your birth details and the reading you'd like. You'll get a payment link, then your written report — no subscriptions, no surprise charges.</p>
+      <ul class="booking-steps">
+        <li><span class="n">01</span> Pick your tier above (T1, T2, or T3).</li>
+        <li><span class="n">02</span> Send your birth details — name, date, and time/place if you have it.</li>
+        <li><span class="n">03</span> You receive a one-time payment link by email.</li>
+        <li><span class="n">04</span> Your written PDF report is emailed to you (T3 adds a live call).</li>
+      </ul>
+    </div>
+
+    <div class="reveal">
+      <form class="book-form" id="bookForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+        <div class="form-row">
+          <div class="field">
+            <label for="name">Full name</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="dob">Date of birth</label>
+            <input type="date" id="dob" name="date_of_birth" required>
+          </div>
+          <div class="field">
+            <label for="bob">Birth time &amp; place <span style="text-transform:none;color:var(--muted-2);">(optional)</span></label>
+            <input type="text" id="bob" name="birth_time_place" placeholder="e.g. 4:30 am, Jaipur">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="service">Reading tier</label>
+            <select id="service" name="reading_tier" required>
+              <option value="">Select one</option>
+              <option>T1 — Essential Chart · £20</option>
+              <option>T2 — Full Reading · £50</option>
+              <option>T3 — Full + Live Call · £100</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="topic">What's this reading for? <span style="text-transform:none;color:var(--muted-2);">(optional)</span></label>
+            <input type="text" id="topic" name="topic" placeholder="e.g. a career move, a relationship, a big decision">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field full">
+            <label for="message">Anything I should know?</label>
+            <textarea id="message" name="message" placeholder="Context, specific questions, or who the reading is for (e.g. a gift)."></textarea>
+          </div>
+        </div>
+        <button type="submit" id="submitBtn">Send details</button>
+        <p class="form-note" id="formNote">Your birth details come straight to your inbox; you'll receive a payment link by email.</p>
+      </form>
+
+      <div class="success-panel" id="successPanel">
+        <div class="result-number" id="successNumber">—</div>
+        <h3>Details received</h3>
+        <p>Your payment link will arrive by email shortly. Thank you!</p>
+      </div>
+
+      <div class="success-panel" id="errorPanel" style="display:none;">
+        <h3>Something went wrong</h3>
+        <p id="errorText" style="margin-bottom:18px;">Your details didn't send. Please email me directly instead.</p>
+        <a href="#" id="mailtoFallback" class="btn-primary" style="display:inline-block;">Email your details</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="disclaimer" data-bg="#141A2C">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="eyebrow">A note on honesty</div>
+      <h2>Read as a lens, not a prophecy</h2>
+      <p>The numbers in a birth date are real, reproducible maths, and they're calculated precisely. But numerology is a tradition of reflection and guidance — not a guarantee of events.</p>
+      <p>So readings focus on <strong style="color:var(--ivory);">themes and tendencies</strong> — where your attention or effort may be best placed — rather than predicting specific outcomes. No reading here will tell you a date is lucky or unlucky in absolute terms, or promise a future event.</p>
+      <p class="clause">For entertainment and personal reflection purposes only. Not a substitute for medical, legal, financial, or mental-health advice.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="brand"><span class="mark">9</span>Ninefold</div>
+      <div class="footer-links">
+        <a href="#about">About</a>
+        <a href="#offer">Readings</a>
+        <a href="#booking">Book</a>
+        <a href="#">Instagram</a>
+      </div>
+    </div>
+    <p class="footer-fine">© 2026 Ninefold Numerology. Working title — brand name pending. Readings for entertainment purposes only.</p>
+  </div>
+</footer>
+
+<script>
+  // ---- Numerology reduction logic (free teaser only) ----
+  function digitSum(str){
+    return str.split('').filter(c => /\d/.test(c)).reduce((a,c) => a + Number(c), 0);
+  }
+  function reduceSequence(dateStr){
+    let n = digitSum(dateStr.replace(/-/g,''));
+    const steps = [n];
+    while(n > 9 && n !== 11 && n !== 22 && n !== 33){
+      n = digitSum(String(n));
+      steps.push(n);
+    }
+    return steps;
+  }
+  const MEANINGS = {
+    1:"The Leader — independent, driven, natural at starting things.",
+    2:"The Diplomat — intuitive, cooperative, reads a room instantly.",
+    3:"The Creator — expressive, social, communicates for a living.",
+    4:"The Builder — methodical, reliable, thinks in systems.",
+    5:"The Explorer — restless, adaptable, resists routine.",
+    6:"The Nurturer — responsible, protective, holds groups together.",
+    7:"The Seeker — analytical, private, drawn to depth over breadth.",
+    8:"The Achiever — ambitious, resourceful, thinks in outcomes.",
+    9:"The Humanitarian — big-picture, generous, finishes what others start.",
+    11:"Master Number — The Intuitive. Heightened sensitivity and insight.",
+    22:"Master Number — The Master Builder. Big vision, practical execution.",
+    33:"Master Number — The Master Teacher. Guidance through compassion."
+  };
+
+  const dobInput = document.getElementById('dobInput');
+  const reductionEl = document.getElementById('reduction');
+  const resultBox = document.getElementById('resultBox');
+
+  dobInput.addEventListener('change', () => {
+    if(!dobInput.value) return;
+    const steps = reduceSequence(dobInput.value);
+    reductionEl.innerHTML = '';
+    steps.forEach((s, i) => {
+      if(i > 0){
+        const arrow = document.createElement('span');
+        arrow.className = 'arrow';
+        arrow.textContent = '→';
+        arrow.style.animationDelay = (i * 0.28) + 's';
+        reductionEl.appendChild(arrow);
+      }
+      const step = document.createElement('span');
+      step.className = 'step';
+      step.textContent = s;
+      step.style.animationDelay = (i * 0.28 + 0.1) + 's';
+      reductionEl.appendChild(step);
+    });
+
+    const final = steps[steps.length - 1];
+    setTimeout(() => {
+      resultBox.innerHTML = `
+        <div class="result">
+          <div class="result-number">${final}</div>
+          <div class="result-text">
+            <strong>Life Path ${final}</strong>
+            ${MEANINGS[final] || ''}
+          </div>
+        </div>
+        <div class="result-link"><a href="number-${final}.html">Read the full Life Path ${final} profile →</a></div>
+        <p class="teaser-note">This is one number of several in a full reading — the complete chart goes far deeper.</p>`;
+    }, steps.length * 280 + 150);
+  });
+
+  // ---- Ticker: 1-9 core numbers ----
+  const core = [1,2,3,4,5,6,7,8,9];
+  const track = document.getElementById('tickerTrack');
+  const labels = {1:"Leader",2:"Diplomat",3:"Creator",4:"Builder",5:"Explorer",6:"Nurturer",7:"Seeker",8:"Achiever",9:"Humanitarian"};
+  let tickerHTML = '';
+  for(let rep = 0; rep < 2; rep++){
+    core.forEach(n => {
+      tickerHTML += `<span class="ticker-item"><span class="num">${n}</span><span class="label">${labels[n]}</span></span>`;
+    });
+  }
+  track.innerHTML = tickerHTML;
+
+  // ---- Scroll-driven scene background ----
+  const sceneBg = document.getElementById('sceneBg');
+  const scenedSections = document.querySelectorAll('[data-bg]');
+  const sceneObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        sceneBg.style.backgroundColor = entry.target.getAttribute('data-bg');
+      }
+    });
+  }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
+  scenedSections.forEach(el => sceneObserver.observe(el));
+
+  // ---- Top scroll progress bar ----
+  const progressBar = document.getElementById('progressBar');
+  let ticking = false;
+  function updateProgress(){
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = pct + '%';
+    ticking = false;
+  }
+  window.addEventListener('scroll', () => {
+    if(!ticking){ requestAnimationFrame(updateProgress); ticking = true; }
+  });
+  updateProgress();
+
+  // ---- Subtle hero widget parallax ----
+  const widgetEl = document.querySelector('.widget');
+  window.addEventListener('scroll', () => {
+    if(window.scrollY < window.innerHeight){
+      widgetEl.style.transform = `translateY(${window.scrollY * 0.06}px)`;
+    }
+  });
+
+  // ---- Scroll reveal ----
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // ---- Briefing form submit (Formspree) ----
+  const bookForm = document.getElementById('bookForm');
+  const successPanel = document.getElementById('successPanel');
+  const errorPanel = document.getElementById('errorPanel');
+  const successNumber = document.getElementById('successNumber');
+  const submitBtn = document.getElementById('submitBtn');
+  const mailtoFallback = document.getElementById('mailtoFallback');
+
+  bookForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending…';
+
+    const formData = new FormData(bookForm);
+    const dobVal = document.getElementById('dob').value;
+
+    // Build a mailto fallback up front in case the request fails
+    const subject = encodeURIComponent('Numerology reading — ' + formData.get('name'));
+    const bodyLines = [
+      'Name: ' + formData.get('name'),
+      'Email: ' + formData.get('email'),
+      'Date of birth: ' + formData.get('date_of_birth'),
+      'Birth time & place: ' + formData.get('birth_time_place'),
+      'Reading tier: ' + formData.get('reading_tier'),
+      'Reading for: ' + formData.get('topic'),
+      'Notes: ' + formData.get('message')
+    ];
+    mailtoFallback.href = 'mailto:you@example.com?subject=' + subject + '&body=' + encodeURIComponent(bodyLines.join('\n'));
+
+    try{
+      const res = await fetch(bookForm.action, {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if(res.ok){
+        if(dobVal){
+          const steps = reduceSequence(dobVal);
+          successNumber.textContent = steps[steps.length - 1];
+        }
+        bookForm.style.display = 'none';
+        successPanel.style.display = 'block';
+      } else {
+        throw new Error('Formspree responded with an error');
+      }
+    } catch(err){
+      bookForm.style.display = 'none';
+      errorPanel.style.display = 'block';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send details';
+    }
+  });
+</script>
+
+</body>
+</html>

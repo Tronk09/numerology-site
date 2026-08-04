@@ -1,0 +1,8 @@
+# Internal planning/business docs — keep out of the public repo
+NUMEROLOGY_BUSINESS.md
+Numerology_Site_Playbook.md
+
+# OS / editor cruft
+Thumbs.db
+.DS_Store
+*.swp
