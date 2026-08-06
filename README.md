@@ -1,4 +1,4 @@
-# Ninefold â€” Vedic Numerology
+# Ninefold — Vedic Numerology
 
 A static single-file numerology site: a free Life Path number widget on the landing page plus a
 per-number profile page for each of the nine core Life Path numbers, leading visitors toward a
@@ -6,9 +6,9 @@ paid Vedic reading.
 
 ## What's here
 
-- `index.html` â€” the landing page with the free "Life Path Finder" widget, the
+- `index.html` — the landing page with the free "Life Path Finder" widget, the
   tiered reading offers, and a booking/briefing form.
-- `number-1.html` â€¦ `number-9.html` â€” one profile page per Life Path number. Each is
+- `number-1.html` … `number-9.html` — one profile page per Life Path number. Each is
   data-driven: all number-specific copy lives in a single `PAGE` object near the top of the file,
   so content is easy to edit per number without touching the layout.
 
