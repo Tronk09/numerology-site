@@ -15,3 +15,8 @@ thevediccalculation_files/
 Thumbs.db
 .DS_Store
 *.swp
+
+# Local Claude Code / skill plugin tooling (regenerable, not site content)
+.agents/
+.claude/
+skills-lock.json
