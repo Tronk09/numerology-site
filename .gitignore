@@ -2,6 +2,15 @@
 NUMEROLOGY_BUSINESS.md
 Numerology_Site_Playbook.md
 
+# Private business tools — hold client PII, never publish
+_private/
+
+# Third-party commercial software reference pages — keep out of the public repo
+Thevediccalculator.htm
+Thevediccalculator_files/
+thevediccalculation.htm
+thevediccalculation_files/
+
 # OS / editor cruft
 Thumbs.db
 .DS_Store

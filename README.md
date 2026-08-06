@@ -23,7 +23,7 @@ matching `number-N.html` profile.
 
 ## Status
 
-Early-stage prototype. Working title "Ninefold" (brand name pending). Payment links, the live
-booking form endpoint, and real testimonials are placeholders to be filled in.
+Early-stage prototype. Brand finalised as **Ninefold**. Payment links, the live
+booking form endpoint (Formspree), and real testimonials are placeholders to be filled in.
 
 > Readings are for entertainment and personal reflection purposes only.
