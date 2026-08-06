@@ -36,6 +36,19 @@
     background-color: var(--ink);
     transition: background-color 1.4s ease;
   }
+  .scene-pattern{
+    position:fixed; inset:0; z-index:-1; pointer-events:none;
+    opacity:0.03;
+    background-image:
+      /* Loshu grid (3x3 magic square) pattern */
+      linear-gradient(rgba(201,169,97,0.4) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,169,97,0.4) 1px, transparent 1px),
+      /* Subtle yantra-inspired diagonal lines */
+      repeating-linear-gradient(45deg, rgba(201,169,97,0.08) 0, rgba(201,169,97,0.08) 1px, transparent 1px, transparent 60px);
+    background-size: 120px 120px, 120px 120px, 200px 200px;
+    background-position: 50% 50%, 50% 50%, 50% 50%;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
+  }
   .scene-glow{
     position:fixed; inset:0; z-index:-1; pointer-events:none;
     background: radial-gradient(ellipse 900px 600px at 78% 8%, rgba(201,169,97,0.10), transparent 60%);
@@ -305,6 +318,7 @@
 
 <div class="scene-bg" id="sceneBg"></div>
 <div class="scene-glow"></div>
+<div class="scene-pattern"></div>
 <div class="progress-bar" id="progressBar"></div>
 
 <nav>
