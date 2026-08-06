@@ -197,17 +197,27 @@
     aspect-ratio: 4/5; background:linear-gradient(160deg, var(--card), var(--ink-2));
     border:1px solid var(--card-line); border-radius:4px;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
-    padding:18px; overflow:hidden;
+    padding:0; overflow:hidden; position:relative;
   }
   .portrait svg{ width:100%; height:auto; max-width:320px; display:block; }
-  .portrait .ph{
-    width:100%; height:100%; min-height:220px; display:flex; flex-direction:column; align-items:center;
-    justify-content:center; gap:10px; border:1px dashed rgba(201,169,97,.42); border-radius:4px;
-    text-align:center; padding:16px;
+  .anchor-photo{
+    width:100%; height:100%; object-fit:cover; object-position:center;
+    display:block; filter:saturate(0.85) brightness(0.92);
   }
-  .ph-label{ font-family:'IBM Plex Mono', monospace; font-size:0.72rem; letter-spacing:0.16em;
-    text-transform:uppercase; color:var(--gold); }
-  .ph-sub{ font-size:0.82rem; color:var(--muted-2); }
+  .anchor-tint{
+    position:absolute; inset:0;
+    background:
+      linear-gradient(160deg, rgba(15,20,32,0.15), rgba(11,16,28,0.55)),
+      radial-gradient(ellipse 120% 80% at 50% 100%, rgba(201,169,97,0.22), transparent 60%);
+    mix-blend-mode:multiply;
+  }
+  .anchor-credit{
+    position:absolute; top:10px; left:12px; z-index:2;
+    font-family:'IBM Plex Mono', monospace; font-size:0.52rem; letter-spacing:0.03em;
+    color:rgba(237,230,214,0.45); background:rgba(11,16,28,0.4); padding:2px 6px; border-radius:2px;
+    text-decoration:none; transition:color .2s ease;
+  }
+  .anchor-credit:hover{ color:var(--gold); }
   .ledger{ list-style:none; }
   .ledger li{
     display:flex; gap:20px; padding:18px 0; border-bottom:1px solid var(--card-line);
@@ -371,10 +381,9 @@
   <div class="wrap about-grid">
     <div class="reveal">
       <div class="portrait">
-        <div class="ph" role="img" aria-label="Anchor artwork — placeholder">
-          <div class="ph-label">Anchor artwork</div>
-          <div class="ph-sub">Placeholder — new image to be decided</div>
-        </div>
+        <img class="anchor-photo" src="https://images.pexels.com/photos/14189669/pexels-photo-14189669.jpeg?auto=compress&cs=tinysrgb&w=900" alt="A hand marking an astrology chart by candlelight" loading="lazy">
+        <div class="anchor-tint" aria-hidden="true"></div>
+        <a class="anchor-credit" href="https://www.pexels.com/photo/a-person-marking-an-astrology-chart-14189669/" target="_blank" rel="noopener">Photo: Gabriela Hughes / Pexels</a>
       </div>
     </div>
     <div class="reveal">
