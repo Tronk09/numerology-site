@@ -304,6 +304,9 @@
   }
   .field textarea{ resize:vertical; min-height:72px; }
   .field input:focus, .field select:focus, .field textarea:focus{ outline:none; border-color:var(--gold); }
+  .phone-wrap{ display:flex; gap:10px; }
+  .phone-wrap select{ flex:0 0 auto; min-width:112px; }
+  .phone-wrap input{ flex:1 1 auto; min-width:0; }
   .book-form button{
     width:100%; background:var(--gold); color:var(--ink); font-weight:600; font-size:0.95rem;
     padding:15px; border:none; border-radius:2px; cursor:pointer; transition:opacity .2s ease; margin-top:6px;
@@ -527,6 +530,30 @@
           </div>
         </div>
         <div class="form-row">
+          <div class="field full">
+            <label for="phone">Phone number <span style="text-transform:none;color:var(--muted-2);">(optional)</span></label>
+            <div class="phone-wrap">
+              <select id="phoneCode" name="phone_code" aria-label="Country code">
+                <option value="+44">+44 United Kingdom</option>
+                <option value="+91">+91 India</option>
+                <option value="+1">+1 US / Canada</option>
+                <option value="+971">+971 UAE</option>
+                <option value="+974">+974 Qatar</option>
+                <option value="+966">+966 Saudi Arabia</option>
+                <option value="+973">+973 Bahrain</option>
+                <option value="+968">+968 Oman</option>
+                <option value="+965">+965 Kuwait</option>
+                <option value="+65">+65 Singapore</option>
+                <option value="+61">+61 Australia</option>
+                <option value="+64">+64 New Zealand</option>
+                <option value="+49">+49 Germany</option>
+                <option value="+31">+31 Netherlands</option>
+              </select>
+              <input type="tel" id="phone" name="phone" placeholder="e.g. 12345 67890" autocomplete="tel">
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
           <div class="field">
             <label for="dob">Date of birth</label>
             <input type="date" id="dob" name="date_of_birth" required>
@@ -747,6 +774,10 @@
     opt.textContent = opt.dataset.label + ' · ' + TIERS[opt.dataset.tier][cur];
   });
 
+  // Default the phone country code to the detected region (India → +91, else +44)
+  const phoneCodeEl = document.getElementById('phoneCode');
+  if(phoneCodeEl){ phoneCodeEl.value = inIndia() ? '+91' : '+44'; }
+
   // ---- Briefing form submit (Formspree) ----
   const bookForm = document.getElementById('bookForm');
   const successPanel = document.getElementById('successPanel');
@@ -777,6 +808,7 @@
     const bodyLines = [
       'Name: ' + formData.get('name'),
       'Email: ' + formData.get('email'),
+      'Phone: ' + (formData.get('phone_code') || '') + (formData.get('phone') ? ' ' + formData.get('phone') : '—'),
       'Date of birth: ' + formData.get('date_of_birth'),
       'Birth time & place: ' + formData.get('birth_time_place'),
       'Reading tier: ' + formData.get('reading_tier'),
