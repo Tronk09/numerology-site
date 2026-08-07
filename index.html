@@ -334,13 +334,22 @@
   .footer-fine{ font-size:0.66rem; color:var(--muted-2); margin-top:18px; }
 
   @media (max-width: 880px){
+    .wrap{ padding:0 20px; }
     .hero-grid, .about-grid, .booking-grid{ grid-template-columns:1fr; }
     .tier-grid{ grid-template-columns:1fr; }
     .hero h1{ font-size:2.4rem; }
     .service-grid, .quote-grid{ grid-template-columns:1fr; }
     .nav-links{ display:none; }
     .form-row{ grid-template-columns:1fr; }
+    .book-form{ padding:26px; }
     .portrait{ aspect-ratio:16/9; }
+  }
+  @media (max-width: 560px){
+    .wrap{ padding:0 16px; }
+    .book-form{ padding:20px; }
+    .phone-wrap{ gap:8px; }
+    .phone-wrap select{ min-width:88px; }
+    .field input, .field select, .field textarea{ padding:11px 12px; }
   }
   @media (prefers-reduced-motion: reduce){
     *{ animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
