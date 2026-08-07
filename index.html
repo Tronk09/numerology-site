@@ -430,7 +430,7 @@
         <span class="t-label">Tier 1</span>
         <h3>Foundations</h3>
         <p>Your core numbers in a written report — the essentials, clearly explained, no fluff.</p>
-        <span class="price">£15<span> / one-time</span></span>
+        <span class="price" data-tier="T1">£15<span> / one-time</span></span>
         <ul>
           <li>Life Path, Expression, Soul Urge</li>
           <li>Loshu Grid overview</li>
@@ -444,7 +444,7 @@
         <span class="t-label">Tier 2 · Most popular</span>
         <h3>The Lifeline</h3>
         <p>Your full chart as a story across a lifetime — the complete Loshu Grid read with the periods of your life laid out ahead of you.</p>
-        <span class="price">£30<span> / one-time</span></span>
+        <span class="price" data-tier="T2">£30<span> / one-time</span></span>
         <ul>
           <li>Complete core chart</li>
           <li>Full Loshu Grid analysis</li>
@@ -458,7 +458,7 @@
         <span class="t-label">Tier 3</span>
         <h3>The Union</h3>
         <p>Everything in The Lifeline plus your full toolkit — mobile numerology, name-based reading, and compatibility matched against another chart.</p>
-        <span class="price">£70<span> / one-time</span></span>
+        <span class="price" data-tier="T3">£70<span> / one-time</span></span>
         <ul>
           <li>Everything in The Lifeline</li>
           <li>Mobile Numerology</li>
@@ -541,9 +541,9 @@
             <label for="service">Reading tier</label>
             <select id="service" name="reading_tier" required>
               <option value="">Select one</option>
-              <option>T1 — Foundations · £15</option>
-              <option>T2 — The Lifeline · £30</option>
-              <option>T3 — The Union · £70</option>
+              <option data-tier="T1" data-label="T1 — Foundations">T1 — Foundations · £15</option>
+              <option data-tier="T2" data-label="T2 — The Lifeline">T2 — The Lifeline · £30</option>
+              <option data-tier="T3" data-label="T3 — The Union">T3 — The Union · £70</option>
             </select>
           </div>
           <div class="field">
@@ -723,6 +723,29 @@
     entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
   }, { threshold: 0.15 });
   revealEls.forEach(el => io.observe(el));
+
+  // ---- Region-aware pricing (India → INR, elsewhere → GBP) ----
+  // Simple check: India is detected via the browser's timezone — no external call.
+  const TIERS = {
+    T1: { gbp: '£15', inr: '₹499' },
+    T2: { gbp: '£30', inr: '₹999' },
+    T3: { gbp: '£70', inr: '₹1999' }
+  };
+
+  function inIndia(){
+    try{
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+      return /(Kolkata|Calcutta)/i.test(tz);
+    }catch(e){ return false; }
+  }
+
+  const cur = inIndia() ? 'inr' : 'gbp';
+  document.querySelectorAll('.price[data-tier]').forEach(el => {
+    el.innerHTML = TIERS[el.dataset.tier][cur] + '<span> / one-time</span>';
+  });
+  document.querySelectorAll('#service option[data-tier]').forEach(opt => {
+    opt.textContent = opt.dataset.label + ' · ' + TIERS[opt.dataset.tier][cur];
+  });
 
   // ---- Briefing form submit (Formspree) ----
   const bookForm = document.getElementById('bookForm');
