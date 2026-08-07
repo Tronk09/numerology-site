@@ -283,7 +283,7 @@
 
   /* ---------- BOOKING / BRIEFING ---------- */
   .booking{ padding:110px 0; border-top:1px solid var(--card-line); }
-  .booking-grid{ display:grid; grid-template-columns:0.85fr 1.15fr; gap:64px; }
+  .booking-grid{ display:grid; grid-template-columns:minmax(0,0.85fr) minmax(0,1.15fr); gap:64px; }
   .booking-info h2{ font-size:2.1rem; color:var(--ivory); margin-bottom:18px; }
   .booking-info p{ color:var(--muted); margin-bottom:28px; max-width:420px; }
   .booking-steps{ list-style:none; }
@@ -293,11 +293,12 @@
   form.book-form{
     background:var(--card); border:1px solid var(--card-line); border-radius:4px; padding:36px;
   }
-  .form-row{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:18px; }
+  .form-row{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:18px; margin-bottom:18px; }
   .field{ display:flex; flex-direction:column; gap:7px; }
   .field.full{ grid-column:1 / -1; }
   .field label{ font-family:'IBM Plex Mono', monospace; font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); }
   .field input, .field select, .field textarea{
+    min-width:0; max-width:100%;
     background:var(--ink-2); border:1px solid var(--card-line); border-radius:2px;
     color:var(--ivory); padding:12px 13px; font-family:'Inter', sans-serif; font-size:0.92rem;
     color-scheme: dark;
@@ -335,12 +336,12 @@
 
   @media (max-width: 880px){
     .wrap{ padding:0 20px; }
-    .hero-grid, .about-grid, .booking-grid{ grid-template-columns:1fr; }
-    .tier-grid{ grid-template-columns:1fr; }
+    .hero-grid, .about-grid, .booking-grid{ grid-template-columns:minmax(0,1fr); }
+    .tier-grid{ grid-template-columns:minmax(0,1fr); }
     .hero h1{ font-size:2.4rem; }
-    .service-grid, .quote-grid{ grid-template-columns:1fr; }
+    .service-grid, .quote-grid{ grid-template-columns:minmax(0,1fr); }
     .nav-links{ display:none; }
-    .form-row{ grid-template-columns:1fr; }
+    .form-row{ grid-template-columns:minmax(0,1fr); }
     .book-form{ padding:26px; }
     .portrait{ aspect-ratio:16/9; }
   }
