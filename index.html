@@ -371,6 +371,7 @@
       <a href="#about">About</a>
       <a href="#offer">Readings</a>
       <a href="#stories">Stories</a>
+      <a href="blog.html">Journal</a>
     </div>
     <a href="#booking" class="nav-cta">Get a reading</a>
   </div>
@@ -633,7 +634,7 @@
         <a href="#about">About</a>
         <a href="#offer">Readings</a>
         <a href="#booking">Book</a>
-        <a href="#">Instagram</a>
+        <a href="blog.html">Journal</a><a href="privacy-policy.html">Privacy</a><a href="terms.html">Terms</a><a href="cookie-policy.html">Cookies</a>
       </div>
     </div>
     <p class="footer-fine">© 2026 Ninefold Numerology. Readings for entertainment purposes only.</p>
@@ -825,7 +826,7 @@
       'Reading for: ' + formData.get('topic'),
       'Notes: ' + formData.get('message')
     ];
-    mailtoFallback.href = 'mailto:9foldnumerology@gmail.com?subject=' + subject + '&body=' + encodeURIComponent(bodyLines.join('\n'));
+    mailtoFallback.href = 'mailto:hello@getninefold.com?subject=' + subject + '&body=' + encodeURIComponent(bodyLines.join('\n'));
 
     try{
       const res = await fetch(bookForm.action, {
